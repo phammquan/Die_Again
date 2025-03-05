@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewBehaviourScript : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
-    // Start is called before the first frame update
+    private bool _gameOver = false;
+    public bool GameOver => _gameOver;
     void Start()
     {
+        Observer.Addlistener("GameOver", Game_Over);
         
     }
 
@@ -14,5 +16,9 @@ public class NewBehaviourScript : MonoBehaviour
     void Update()
     {
         
+    }
+    void Game_Over(object[] datas)
+    {
+        _gameOver = true;
     }
 }
