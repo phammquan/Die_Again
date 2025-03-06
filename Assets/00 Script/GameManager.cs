@@ -42,6 +42,7 @@ public class GameManager : Singleton<GameManager>
 
     IEnumerator LoadLevel(int index)
     {
+        SoundController.Instance.SFXPlay("Win");
         yield return new WaitForSeconds(.5f);
         SceneManager.LoadScene(index);
     }

@@ -8,15 +8,15 @@ public class PlayerController : Singleton<PlayerController>
 {
     [Header("Move")] [SerializeField] private float _speed;
     [SerializeField] float _jumpForce;
-    
+
     private Rigidbody _rb;
-    [SerializeField]private bool _isGrounded = true;
+    [SerializeField] private bool _isGrounded = true;
     public bool IsGrounded => _isGrounded;
     [Space] [SerializeField] private Button _jumpButton;
     [SerializeField] private Joystick _joystick;
     private float horizontal;
     private float vertical;
-    
+
     private bool _gameOver;
     public bool GameOver => _gameOver;
 
@@ -29,19 +29,22 @@ public class PlayerController : Singleton<PlayerController>
 
     private void Update()
     {
-        horizontal = _joystick.Horizontal;
-        vertical = _joystick.Vertical;
+        horizontal = (_joystick.Horizontal != 0) ? _joystick.Horizontal : Input.GetAxis("Horizontal");
+        vertical = (_joystick.Vertical != 0) ? _joystick.Vertical : Input.GetAxis("Vertical");
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            SoundController.Instance.SFXPlay("Jump");
             Jump();
         }
     }
+
     void FixedUpdate()
     {
         if (!_gameOver)
         {
             Move();
         }
+
         CheckGameOver();
     }
 
@@ -53,11 +56,9 @@ public class PlayerController : Singleton<PlayerController>
             _isGrounded = false;
         }
     }
-    
+
     void Move()
     {
-        
-
         Vector3 moveDirection = new Vector3(horizontal, 0, vertical).normalized;
 
         Vector3 velocity = _rb.velocity;
@@ -74,7 +75,7 @@ public class PlayerController : Singleton<PlayerController>
 
     private void OnCollisionEnter(Collision other)
     {
-        if(other.gameObject.CompareTag("Platform"))
+        if (other.gameObject.CompareTag("Platform"))
         {
             _isGrounded = true;
         }
@@ -83,16 +84,15 @@ public class PlayerController : Singleton<PlayerController>
             _isGrounded = false;
         }
     }
-    
 
 
     void CheckGameOver()
     {
-        if (this.transform.position.y < -7)
+        if (this.transform.position.y < -7 && !_gameOver)
         {
+            SoundController.Instance.SFXPlay("Die");
             _gameOver = true;
             Observer.Notify("GameOver", null);
         }
-}
-    
+    }
 }

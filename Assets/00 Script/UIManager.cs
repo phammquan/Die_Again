@@ -43,6 +43,7 @@ public class UIManager : MonoBehaviour
 
     void OpenPanelOver(object[] datas)
     {
+        //SoundController.Instance.SFXPlay("Lose");
         if (_gameOverPanel != null)
         {
             LeanTween.scale(_gameOverPanel, new Vector3(1f, 1f, 1f), 0.2f).setEase(EaseType);
