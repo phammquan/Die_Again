@@ -26,21 +26,29 @@ public class PlayerState : MonoBehaviour
 
     void UpdateState()
     {
-        if (!PlayerController.Instance.IsGrounded)
+        if (!PlayerController.Instance.GameOver)
         {
-            _playState = playerState.JUMP;
-        }
-        else
-        {
-            if (Mathf.Abs(_rigi.velocity.x) > velocityThreshold || Mathf.Abs(_rigi.velocity.z) > velocityThreshold)
+            if (!PlayerController.Instance.IsGrounded)
             {
-                _playState = playerState.RUN;
+                _playState = playerState.JUMP;
             }
             else
             {
-                _playState = playerState.IDLE;
+                if (PlayerController.Instance.IsGrounded && Mathf.Abs(_rigi.velocity.x) > velocityThreshold || Mathf.Abs(_rigi.velocity.z) > velocityThreshold)
+                {
+                    _playState = playerState.RUN;
+                }
+                else
+                {
+                    _playState = playerState.IDLE;
+                }
             }
         }
+        else
+        {
+            _playState = playerState.DIE;
+        }
+
     }
 
     void OnTriggerEnter(Collider other)
